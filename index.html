@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Rutuja Chaple — Full Stack Developer</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- AOS for scroll animations -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"
+      rel="stylesheet"
+    />
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        /* Purple gradient + white theme */
+        --bg-dark: #0b0214;
+        --grad-1: #8e2de2; /* violet */
+        --grad-2: #4a00e0; /* deep purple */
+        --accent-light: #b388ff; /* lighter violet */
+        --card-bg: #ffffff;
+        --card-opaque: rgba(255, 255, 255, 0.96);
+        --muted: #6b6b7a;
+        --shadow: 0 12px 40px rgba(74, 0, 224, 0.12);
+        --glass: rgba(255, 255, 255, 0.06);
+        --text-dark: #0b0220;
+        --white: #ffffff;
+        --border-subtle: rgba(74, 0, 224, 0.06);
+      }
+
+      /* dark theme variables (will be applied to body.dark) */
+      body.dark {
+        --card-bg: #0e0b14;
+        --card-opaque: rgba(14, 11, 20, 0.82);
+        --glass: rgba(255, 255, 255, 0.02);
+        --muted: #bfb7e9;
+        --text-dark: #eae6ff;
+        --white: #f8f7ff;
+        --border-subtle: rgba(255, 255, 255, 0.04);
+        background: linear-gradient(180deg, #08040a, #07030a 60%);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto,
+          "Noto Sans", sans-serif;
+        margin: 0;
+        color: var(--text-dark);
+        background: radial-gradient(
+            900px 400px at 10% -10%,
+            rgba(142, 45, 226, 0.1),
+            transparent
+          ),
+          radial-gradient(
+            900px 400px at 110% 10%,
+            rgba(74, 0, 224, 0.07),
+            transparent
+          ),
+          linear-gradient(180deg, var(--bg-dark), #140322 80%);
+        min-height: 100vh;
+      }
+
+      /* NAV */
+      .navbar {
+        background: rgba(11, 2, 20, 0.65);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        backdrop-filter: blur(6px);
+        z-index: 50;
+      }
+      .navbar-brand {
+        color: white;
+        font-weight: 700;
+        letter-spacing: 0.2px;
+      }
+      .nav-link {
+        color: rgba(255, 255, 255, 0.78);
+      }
+      .nav-link:hover,
+      .nav-link.active {
+        color: var(--grad-1);
+        font-weight: 600;
+      }
+
+      /* floating theme toggle */
+      .theme-toggle {
+        position: fixed;
+        right: 18px;
+        top: 18px;
+        z-index: 120;
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background: linear-gradient(135deg, var(--grad-1), var(--grad-2));
+        box-shadow: 0 8px 22px rgba(74, 0, 224, 0.18);
+        color: white;
+        border: none;
+      }
+      .theme-toggle:focus {
+        outline: 3px solid rgba(178, 136, 255, 0.25);
+      }
+
+      /* HERO */
+      .hero {
+        padding: 110px 0 60px;
+        text-align: left;
+        color: var(--white);
+      }
+      .hero-inner {
+        display: flex;
+        gap: 30px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .intro {
+        max-width: 680px;
+      }
+      h1 {
+        font-size: clamp(28px, 5.2vw, 46px);
+        margin: 0 0 0.4rem 0;
+        line-height: 1.05;
+        font-weight: 800;
+        letter-spacing: -0.3px;
+      }
+      h1 .accent {
+        background: linear-gradient(135deg, var(--grad-1), var(--grad-2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+      }
+      .lead {
+        color: #e6e0ffcc;
+        margin-bottom: 18px;
+      }
+
+      .hero-ctas .btn-primary {
+        background: linear-gradient(135deg, var(--grad-1), var(--grad-2));
+        border: none;
+        box-shadow: var(--shadow);
+        color: white;
+        font-weight: 600;
+        border-radius: 12px;
+        padding: 10px 18px;
+      }
+      .hero-ctas .btn-outline {
+        border-radius: 12px;
+        padding: 10px 18px;
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: transparent;
+      }
+
+      /* CARD STYLE (white cards on purple bg) */
+      .card-white {
+        background: var(--card-opaque);
+        border-radius: 14px;
+        padding: 18px;
+        box-shadow: 0 8px 30px rgba(10, 6, 20, 0.35);
+        border: 1px solid var(--border-subtle);
+        color: var(--text-dark);
+      }
+      section {
+        padding: 64px 0;
+      }
+
+      /* Skills badges */
+      .skill-badge {
+        display: inline-block;
+        padding: 8px 12px;
+        margin: 6px 6px 6px 0;
+        border-radius: 999px;
+        background: rgba(74, 0, 224, 0.06);
+        color: #3a0065;
+        font-weight: 600;
+        border: 1px solid rgba(142, 45, 226, 0.08);
+      }
+
+      /* Projects grid */
+      .project-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(0, 0, 0, 0.06);
+        transition: transform 0.28s ease, box-shadow 0.28s ease;
+        color: var(--text-dark);
+      }
+      .project-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 18px 45px rgba(74, 0, 224, 0.12);
+      }
+      .project-card .meta {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      /* Certificates */
+      .cert-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+      }
+
+      /* Contact */
+      .contact-card {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        padding: 18px;
+        border-radius: 12px;
+        background: var(--card-opaque);
+        border: 1px solid var(--border-subtle);
+      }
+
+      footer {
+        padding: 26px 0;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.72);
+        border-top: 1px solid rgba(255, 255, 255, 0.02);
+      }
+
+      /* small responsive tweaks */
+      @media (max-width: 767px) {
+        .hero-inner {
+          flex-direction: column-reverse;
+          text-align: center;
+        }
+        .intro {
+          max-width: 100%;
+        }
+        .theme-toggle {
+          right: 12px;
+          top: 12px;
+        }
+      }
+
+      /* reveal animation baseline (will be toggled by JS) */
+      .reveal {
+        opacity: 0;
+        transform: translateY(18px);
+        transition: all 0.6s cubic-bezier(0.16, 0.84, 0.32, 1);
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: none;
+      }
+
+      /* Contact Me section custom vars (the block you asked to add uses these) */
+      :root {
+        --bg-2: rgba(9, 2, 25, 0.8);
+        --card: rgba(255, 255, 255, 0.06);
+        --accent-2: #b388ff;
+      }
+      body.dark {
+        --card: rgba(255, 255, 255, 0.02);
+        --bg-2: rgba(6, 4, 10, 0.6);
+        --accent-2: #9a76ff;
+      }
+
+      .contact-me-card {
+        background: var(--card);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: var(--shadow);
+        color: var(--white);
+      }
+      .contact-me-card a {
+        color: var(--accent-2);
+        text-decoration: none;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body data-bs-spy="scroll" data-bs-target="#mainNav" tabindex="0">
+    <!-- Theme toggle (floating) -->
+    <button
+      id="themeToggle"
+      class="theme-toggle"
+      aria-label="Toggle dark mode"
+      title="Toggle theme"
+    >
+      🌙
+    </button>
+
+    <!-- NAV -->
+    <nav id="mainNav" class="navbar navbar-expand-lg navbar-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#home">Rutuja Chaple</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navContent"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navContent">
+          <ul class="navbar-nav ms-auto align-items-lg-center">
+            <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+            <li class="nav-item">
+              <a class="nav-link" href="#about">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#skills">Skills</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#projects">Projects</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#certificates">Certificates</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#contact-more">Contact</a>
+            </li>
+            <li class="nav-item ms-2">
+              <a
+                class="btn btn-sm"
+                href="Rutuja_Resume.pdf"
+                download
+                style="
+                  background: var(--card-opaque);
+                  color: #2f0050;
+                  border-radius: 10px;
+                  font-weight: 700;
+                "
+              >
+                📄 Resume
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <header id="home" class="hero">
+      <div class="container reveal" data-aos="fade-up">
+        <div class="hero-inner">
+          <div class="intro">
+            <span
+              style="
+                display: inline-block;
+                padding: 8px 12px;
+                border-radius: 999px;
+                background: rgba(255, 255, 255, 0.06);
+                color: #f3e9ff;
+                font-weight: 700;
+                margin-bottom: 12px;
+              "
+              >BCA Student • Web Developer</span
+            >
+            <h1>Hi, I'm <span class="accent">Rutuja Chaple</span></h1>
+            <p class="lead">
+              I build clean, responsive web apps using HTML, CSS, JavaScript,
+              PHP and Python. I enjoy turning ideas into well-crafted user
+              experiences.
+            </p>
+
+            <div class="hero-ctas d-flex flex-wrap gap-3">
+              <a
+                class="btn btn-primary"
+                href="Rutuja_Resume.pdf"
+                download
+                >⬇️ Download Resume</a
+              >
+              <a class="btn btn-outline" href="#contact-more">✉️ Contact Me</a>
+              <a class="btn btn-outline" href="#projects">Projects →</a>
+            </div>
+
+            <div style="margin-top: 18px; color: #e9e2ff; font-weight: 600">
+              <span id="typing-text"></span>
+            </div>
+          </div>
+
+          <!-- avatar / placeholder -->
+          <div
+            style="
+              min-width: 240px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            "
+          >
+            <div
+              style="
+                width: 220px;
+                height: 220px;
+                border-radius: 50%;
+                padding: 8px;
+                background: conic-gradient(
+                  from 120deg,
+                  var(--grad-1),
+                  var(--grad-2)
+                );
+                box-shadow: 0 20px 50px rgba(74, 0, 224, 0.16);
+              "
+            >
+              <img
+                src="WhatsApp_Image_2025-11-11_at_2.01.50_PM-removebg-preview.png"
+                alt="Rutuja"
+                style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                  border-radius: 50%;
+                  border: 4px solid white;
+                "
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="container">
+        <div class="row g-4 align-items-center">
+          <div class="col-lg-7 reveal" data-aos="fade-right">
+            <div class="card-white">
+              <h3 style="margin-bottom: 6px">About Me</h3>
+              <p style="color: var(--muted); margin-bottom: 10px">
+                BCA student with hands-on projects in web development and
+                Python. Focused on clean code, responsive UI, and practical
+                full-stack solutions.
+              </p>
+              <ul style="color: var(--muted)">
+                <li>HTML, CSS, JavaScript, Bootstrap</li>
+                <li>Python, Django, Flask</li>
+                <li>MySQL, SQLite, Git & GitHub</li>
+                <li>Responsive design and user-centred experiences</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="col-lg-5 reveal" data-aos="fade-left">
+            <div class="card-white text-center">
+              <h5 style="margin-bottom: 8px">Quick Info</h5>
+              <p style="margin-bottom: 6px">
+                <strong>Location:</strong> Pune, India
+              </p>
+              <p style="margin-bottom: 6px">
+                <strong>Email:</strong>
+                <a href="mailto:rutujachaple@gmail.com"
+                  >rutujachaple@gmail.com</a
+                >
+              </p>
+              <p style="margin-bottom: 6px">
+                <strong>Looking for:</strong> Internship / Junior Web Developer
+                roles
+              </p>
+              <div style="margin-top: 12px">
+                <a
+                  href="https://github.com/rutujachaple"
+                  target="_blank"
+                  style="
+                    margin-right: 10px;
+                    color: var(--grad-1);
+                    font-weight: 700;
+                  "
+                  >GitHub</a
+                >
+                <a
+                  href="https://www.linkedin.com/in/rutujachaple16/"
+                  target="_blank"
+                  style="
+                    margin-right: 10px;
+                    color: var(--grad-1);
+                    font-weight: 700;
+                  "
+                  >LinkedIn</a
+                >
+                <a
+                  href="https://www.instagram.com/ruttuuu_003"
+                  target="_blank"
+                  style="color: var(--grad-1); font-weight: 700"
+                  >Instagram</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills">
+      <div class="container reveal" data-aos="fade-up">
+        <h3 style="color: var(--card-opaque); margin-bottom: 12px">Skills</h3>
+        <div class="card-white p-3">
+          <div>
+            <span class="skill-badge">HTML</span>
+            <span class="skill-badge">CSS</span>
+            <span class="skill-badge">JavaScript</span>
+            <span class="skill-badge">Bootstrap</span>
+            <span class="skill-badge">Python</span>
+            <span class="skill-badge">Django</span>
+            <span class="skill-badge">MySQL</span>
+            <span class="skill-badge">Git</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+      <div class="container reveal" data-aos="fade-up">
+        <h3 style="color: var(--card-opaque); margin-bottom: 12px">Projects</h3>
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="project-card p-3">
+              <div style="padding: 12px">
+                <h5 style="margin-bottom: 6px">Selling Beauty Products</h5>
+                <p class="meta">
+                  E-commerce app built with Django, SQLite and Bootstrap.
+                  Product listing, cart, checkout.
+                </p>
+                <div style="margin-top: 10px">
+                  <a href="https://github.com/rutujachaple" class="btn btn-primary" tyle="font-weight: 700;"
+                    >Code</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="project-card p-3">
+              <div style="padding: 12px">
+                <h5 style="margin-bottom: 6px">JS Calculator</h5>
+                <p class="meta">
+                  Simple, responsive calculator using HTML/CSS/JS — clean UI and
+                  accessible controls.
+                </p>
+                  <a href="https://github.com/rutujachaple" class="btn btn-primary" style="font-weight: 700;"
+                    >Code</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CERTIFICATES -->
+    <section id="certificates">
+      <div class="container reveal" data-aos="fade-up">
+        <h3 style="color: var(--card-opaque); margin-bottom: 12px">
+          Certificates & Achievements
+        </h3>
+        <div class="card-white p-3">
+          <div class="cert-grid">
+            <div
+              style="
+                padding: 12px;
+                border-radius: 10px;
+                background: var(--card-bg);
+              "
+            >
+              <strong>Web Development Bootcamp</strong>
+              <div
+                style="color: var(--muted); font-size: 13px; margin-top: 6px"
+              >
+                Completion Certificate — HTML/CSS/JS
+              </div>
+            </div>
+            <div
+              style="
+                padding: 12px;
+                border-radius: 10px;
+                background: var(--card-bg);
+              "
+            >
+              <strong>Python Programming</strong>
+              <div
+                style="color: var(--muted); font-size: 13px; margin-top: 6px"
+              >
+                Intro to Python — university course
+              </div>
+            </div>
+            <div
+              style="
+                padding: 12px;
+                border-radius: 10px;
+                background: var(--card-bg);
+              "
+            >
+              <strong>Django Basics</strong>
+              <div
+                style="color: var(--muted); font-size: 13px; margin-top: 6px"
+              >
+                Built a mini e-commerce project
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section
+      id="contact-more"
+      class="py-5 text-center"
+      style="background-color: var(--bg-2); color: var(--white)"
+    >
+      <div class="container">
+        <h2 class="mb-4">Contact Me</h2>
+        <p class="mb-5">
+          If you’d like to get in touch, here’s how you can reach me.
+        </p>
+
+        <div class="row mb-4">
+          <div class="col-md-4 mb-3">
+            <div class="contact-me-card">
+              <h5>📧 Email</h5>
+              <p>rutujachaple@gmail.com</p>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="contact-me-card">
+              <h5>📞 Phone</h5>
+              <p>+91 8317325953</p>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="contact-me-card">
+              <h5>📍 Location</h5>
+              <p>Pune, India</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-md-3 mb-3">
+            <div class="contact-me-card">
+              <h5>📷 Instagram</h5>
+              <p>
+                <a
+                  href="https://www.instagram.com/ruttuuu_003"
+                  target="_blank"
+                  style="color: var(--accent-2); text-decoration: none"
+                  >@ruttuuu_003</a
+                >
+              </p>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="contact-me-card">
+              <h5>💼 LinkedIn</h5>
+              <p>
+                <a
+                  href="https://www.linkedin.com/in/rutujachaple16/"
+                  target="_blank"
+                  style="color: var(--accent-2); text-decoration: none"
+                  >Rutuja Chaple</a
+                >
+              </p>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="contact-me-card">
+              <h5>🐦 Twitter</h5>
+              <p>
+                <a
+                  href="#"
+                  target="_blank"
+                  style="color: var(--accent-2); text-decoration: none"
+                  >@rutuja_16</a
+                >
+              </p>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="contact-me-card">
+              <h5>💻 GitHub</h5>
+              <p>
+                <a
+                  href="https://github.com/rutujachaple"
+                  target="_blank"
+                  style="color: var(--accent-2); text-decoration: none"
+                  >github.com/rutujachaple</a
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <a
+          href="https://docs.google.com/forms/d/e/1FAIpQLSe701PwFQAVw4YJnbSvg7PvJAUBM_ab8-UBBLAlSWvDQ2qq1w/viewform?usp=dialog"
+          target="_blank"
+          class="btn btn-primary btn-lg mb-3"
+          style="
+            background: linear-gradient(135deg, var(--grad-1), var(--grad-2));
+            border: none;
+            box-shadow: var(--shadow);
+            color: white;
+          "
+        >
+          📄 Fill Google Form
+        </a>
+      </div>
+    </section>
+
+    <footer>© <span id="year"></span> Rutuja Chaple </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+    <script>
+      // AOS init
+      AOS.init({ duration: 800, once: true });
+
+      // Typing effect
+      const textArray = [
+        "BCA Student",
+        "Web Developer",
+        "Python Learner",
+        "Aspiring Full Stack Developer",
+      ];
+      let idx = 0,
+        charIdx = 0;
+      const typingEl = document.getElementById("typing-text");
+
+      function type() {
+        if (charIdx < textArray[idx].length) {
+          typingEl.textContent += textArray[idx].charAt(charIdx);
+          charIdx++;
+          setTimeout(type, 90);
+        } else {
+          setTimeout(erase, 1300);
+        }
+      }
+      function erase() {
+        if (charIdx > 0) {
+          typingEl.textContent = textArray[idx].substring(0, charIdx - 1);
+          charIdx--;
+          setTimeout(erase, 40);
+        } else {
+          idx = (idx + 1) % textArray.length;
+          setTimeout(type, 300);
+        }
+      }
+
+      // Reveal animations (IntersectionObserver)
+      function setupReveal() {
+        const revealEls = document.querySelectorAll(".reveal");
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                io.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.12 }
+        );
+        revealEls.forEach((el) => io.observe(el));
+      }
+
+      // Theme toggle with persistence
+      const toggleBtn = document.getElementById("themeToggle");
+      const userPref = localStorage.getItem("rutuja-theme");
+      function applyTheme(theme) {
+        if (theme === "dark") {
+          document.body.classList.add("dark");
+          toggleBtn.textContent = "☀️";
+          toggleBtn.title = "Switch to light theme";
+        } else {
+          document.body.classList.remove("dark");
+          toggleBtn.textContent = "🌙";
+          toggleBtn.title = "Switch to dark theme";
+        }
+        localStorage.setItem("rutuja-theme", theme);
+      }
+      // initialize theme
+      if (userPref) applyTheme(userPref);
+      else {
+        // default to light-ish (but visually purple). If user's OS prefers dark, set dark.
+        const osDark =
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches;
+        applyTheme(osDark ? "dark" : "light");
+      }
+      toggleBtn.addEventListener("click", () => {
+        const isDark = document.body.classList.contains("dark");
+        applyTheme(isDark ? "light" : "dark");
+      });
+
+      // Contact form (client-side only)
+      document.addEventListener("DOMContentLoaded", () => {
+        type();
+        setupReveal();
+        document.getElementById("year").textContent = new Date().getFullYear();
+
+        const form = document.getElementById("contact-form"),
+          alertBox = document.getElementById("form-alert");
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          alertBox.style.display = "block";
+          alertBox.style.color = "#2b2b2b";
+          alertBox.textContent =
+            "Thank you — message received locally. To actually send email, connect EmailJS or a backend.";
+          form.reset();
+        });
+
+        // auto-close mobile navbar after click
+        const navLinks = document.querySelectorAll("#navContent .nav-link");
+        const navCollapse = document.getElementById("navContent");
+        navLinks.forEach((link) =>
+          link.addEventListener("click", () => {
+            if (navCollapse.classList.contains("show"))
+              new bootstrap.Collapse(navCollapse).hide();
+          })
+        );
+      });
+    </script>
+  </body>
+</html>
